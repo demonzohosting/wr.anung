@@ -1,249 +1,202 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Kedai Anung - Pesan via WhatsApp</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kedai Anung</title>
   <style>
-    :root{--accent:#c1531b;--muted:#666}
-    body{font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; margin:0; background:#f7f7f7; color:#111}
-    .container{max-width:960px;margin:28px auto;padding:20px}
-    header{display:flex;align-items:center;gap:16px}
-    .logo{width:80px;height:80px;border-radius:12px;overflow:hidden;flex-shrink:0}
-    .logo img{width:100%;height:100%;object-fit:contain}
-    h1{margin:0;font-size:22px;color:var(--accent)}
-    p.lead{margin:6px 0 18px;color:var(--muted)}
-    .menu{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
-    .card{background:#fff;padding:12px;border-radius:12px;box-shadow:0 4px 14px rgba(16,24,40,0.04)}
-    .item-name{font-weight:600}
-    .controls{margin-top:10px;display:flex;align-items:center;gap:8px}
-    .qty{width:36px;height:36px;border-radius:8px;border:1px solid #e5e7eb;display:flex;align-items:center;justify-content:center}
-    button.btn{background:var(--accent);color:#fff;padding:10px 14px;border-radius:10px;border:none;cursor:pointer}
-    .cart{margin-top:20px;background:#fff;padding:14px;border-radius:12px}
-    .cart-list{min-height:60px}
-    .cart-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed #eee}
-    .muted{color:var(--muted);font-size:13px}
-    footer{margin-top:24px;text-align:center;color:var(--muted);font-size:13px}
-    .queue{margin-top:20px;background:#fff;padding:14px;border-radius:12px}
-    .queue-row{border-bottom:1px dashed #eee;padding:6px 0;display:flex;justify-content:space-between;align-items:center}
-    @media (max-width:520px){header{flex-direction:column;align-items:flex-start}.logo{width:70px;height:70px}}
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #fff;
+      margin: 0;
+      padding: 0;
+      color: #333;
+      text-align: center;
+    }
+
+    header {
+      padding: 20px;
+    }
+
+    header img {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    h1 {
+      font-size: 26px;
+      margin: 10px 0;
+      font-weight: 700;
+    }
+
+    .menu-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 15px;
+      padding: 20px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .menu-item {
+      background: #fafafa;
+      border-radius: 12px;
+      padding: 15px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease;
+      cursor: pointer;
+    }
+
+    .menu-item:hover {
+      transform: translateY(-5px);
+    }
+
+    .menu-item h3 {
+      margin: 10px 0;
+    }
+
+    button {
+      background-color: #25d366;
+      border: none;
+      color: white;
+      padding: 8px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background-color: #128c7e;
+    }
+
+    .order-form {
+      margin: 20px auto;
+      max-width: 400px;
+      padding: 15px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 8px;
+      margin: 6px 0 12px 0;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    #antrian {
+      margin: 30px auto;
+      max-width: 600px;
+      text-align: left;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 10px;
+      padding: 10px 15px;
+      margin-bottom: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      opacity: 0;
+      transform: translateY(10px);
+      animation: fadeInUp 0.5s forwards;
+    }
+
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .card button {
+      background: #ff4d4d;
+      margin-top: 8px;
+    }
   </style>
 </head>
 <body>
-  <div class="container">
-    <header>
-      <div class="logo"><img src="https://cdn.discordapp.com/attachments/1274240418141175840/1428309417585152133/c1686154-1056-44a2-acf7-c6bfb5e4481a.png" alt="Logo Kedai Anung" /></div>
-      <div>
-        <h1>Kedai Anung</h1>
-        <p class="lead">Warung sederhana - pesan makanan & minuman langsung lewat WhatsApp.</p>
-      </div>
-    </header>
 
-    <section>
-      <h2 style="margin-top:18px">Menu</h2>
-      <div class="menu" id="menu"></div>
+  <header>
+    <img src="https://cdn.discordapp.com/attachments/1274240418141175840/1428309417585152133/c1686154-1056-44a2-acf7-c6bfb5e4481a.png?ex=68f2084d&is=68f0b6cd&hm=7f20839695939f32e67a24a28fef99151d54d107b1f33205319fd08b9edbcb10&" alt="Logo Kedai Anung">
+    <h1>Kedai Anung</h1>
+    <p>Pesan cepat via WhatsApp 🍜☕</p>
+  </header>
 
-      <div class="cart" id="cart">
-        <h3>Pesanan</h3>
-        <div class="cart-list" id="cart-list">
-          <div class="muted">Silahkan Pesan.</div>
-        </div>
-        <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
-          <input id="customer-name" placeholder="Nama (opsional)" style="flex:1;padding:10px;border-radius:10px;border:1px solid #e5e7eb" />
-          <input id="customer-note" placeholder="Catatan (mis. kurang pedas)" style="flex:1;padding:10px;border-radius:10px;border:1px solid #e5e7eb" />
-        </div>
-        <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end">
-          <button class="btn" id="add-queue-btn" style="background:#3b82f6">Tambah ke Antrian</button>
-          <button class="btn" id="clear-btn" style="background:#ef4444">Bersihkan</button>
-          <button class="btn" id="order-btn">Pesan via WhatsApp</button>
-        </div>
-        <p class="muted" style="margin-top:8px">Catatan: Cek kembali pesanan sebelum dikirim. <code>Terima kasih</code> @ Kedai Anung.</p>
-      </div>
-
-      <!-- DAFTAR ANTRIAN -->
-      <div class="queue" id="queue">
-        <h3>Daftar Antrian Pemesanan</h3>
-        <div id="queue-list" class="muted">Belum ada antrian.</div>
-      </div>
-    </section>
-
-    <footer>
-      &copy; Kedai Anung • Dipesan otomatis lewat WhatsApp
-    </footer>
+  <div class="order-form">
+    <h3>Form Pemesanan</h3>
+    <input type="text" id="nama" placeholder="Masukkan Nama Anda" required />
+    <select id="menu">
+      <option value="">-- Pilih Menu --</option>
+      <option>Mie</option>
+      <option>Kopi Aceh</option>
+      <option>Kopi Gooday</option>
+      <option>Kopi Hitam</option>
+      <option>Es Jeruk</option>
+      <option>Jeruk Panas</option>
+      <option>Es Teh</option>
+      <option>Temulawak</option>
+    </select>
+    <button onclick="pesan()">Pesan via WhatsApp</button>
   </div>
 
+  <section id="antrian">
+    <h2>📋 Daftar Antrian</h2>
+    <div id="list-antrian"></div>
+  </section>
+
   <script>
-    const ownerPhone = '6281929482402'; // Nomor WhatsApp tujuan
+    const antrian = JSON.parse(localStorage.getItem("antrianKedai")) || [];
 
-    const menuData = [
-      { id: 'mie', name: 'Mie' },
-      { id: 'kopi_aceh', name: 'Kopi Aceh' },
-      { id: 'kopi_gooday', name: 'Kopi Gooday' },
-      { id: 'kopi_hitam', name: 'Kopi Hitam' },
-      { id: 'es_jeruk', name: 'Es Jeruk' },
-      { id: 'jeruk_panas', name: 'Jeruk Panas' },
-      { id: 'es_teh', name: 'Es Teh' },
-      { id: 'temulawak', name: 'Temulawak' }
-    ];
-
-    const order = {};
-    let queue = JSON.parse(localStorage.getItem('kedai_anung_queue') || '[]');
-
-    const menuEl = document.getElementById('menu');
-    const cartListEl = document.getElementById('cart-list');
-    const customerNameEl = document.getElementById('customer-name');
-    const customerNoteEl = document.getElementById('customer-note');
-    const orderBtn = document.getElementById('order-btn');
-    const clearBtn = document.getElementById('clear-btn');
-    const addQueueBtn = document.getElementById('add-queue-btn');
-    const queueListEl = document.getElementById('queue-list');
-
-    function saveQueue() {
-      localStorage.setItem('kedai_anung_queue', JSON.stringify(queue));
-    }
-
-    function createMenu() {
-      menuData.forEach(item => {
-        const card = document.createElement('div');
-        card.className = 'card';
+    function renderAntrian() {
+      const list = document.getElementById("list-antrian");
+      list.innerHTML = "";
+      antrian.forEach((item, i) => {
+        const card = document.createElement("div");
+        card.className = "card";
         card.innerHTML = `
-          <div class="item-name">${item.name}</div>
-          <div class="muted">Silakan pilih jumlah</div>
-          <div class="controls">
-            <button class="qty-btn" data-id="${item.id}" data-action="dec">-</button>
-            <div class="qty" id="qty-${item.id}">0</div>
-            <button class="qty-btn" data-id="${item.id}" data-action="inc">+</button>
-          </div>
+          <strong>#${i + 1}</strong> - ${item.nama} (${item.menu})<br>
+          <small>${item.waktu}</small><br>
+          <button onclick="selesai(${i})">✔️ Selesai</button>
         `;
-        menuEl.appendChild(card);
-      });
-
-      menuEl.addEventListener('click', (e) => {
-        const btn = e.target.closest('.qty-btn');
-        if (!btn) return;
-        const id = btn.dataset.id;
-        const action = btn.dataset.action;
-        if (action === 'inc') changeQty(id, 1);
-        else changeQty(id, -1);
+        list.appendChild(card);
       });
     }
 
-    function changeQty(id, delta) {
-      const current = order[id] || 0;
-      const next = Math.max(0, current + delta);
-      if (next === 0) delete order[id];
-      else order[id] = next;
-      document.getElementById('qty-' + id).textContent = next;
-      renderCart();
+    function pesan() {
+      const nama = document.getElementById("nama").value.trim();
+      const menu = document.getElementById("menu").value;
+      if (!nama || !menu) return alert("Isi nama dan pilih menu dulu ya!");
+
+      const waktu = new Date().toLocaleString("id-ID");
+      antrian.push({ nama, menu, waktu });
+      localStorage.setItem("antrianKedai", JSON.stringify(antrian));
+      renderAntrian();
+
+      const nomorAntrian = antrian.length;
+      alert(`Nomor Antrian Anda #${nomorAntrian}`);
+
+      const pesan = `Halo Kedai Anung, saya *${nama}* ingin pesan *${menu}*.\nNomor Antrian: #${nomorAntrian}\nWaktu: ${waktu}`;
+      const waUrl = `https://wa.me/6281929482402?text=${encodeURIComponent(pesan)}`;
+      window.open(waUrl, "_blank");
+
+      document.getElementById("nama").value = "";
+      document.getElementById("menu").value = "";
     }
 
-    function renderCart() {
-      cartListEl.innerHTML = '';
-      const keys = Object.keys(order);
-      if (keys.length === 0) {
-        cartListEl.innerHTML = '<div class="muted">Belum ada pesanan.</div>';
-        return;
-      }
-      keys.forEach(id => {
-        const item = menuData.find(m => m.id === id);
-        const row = document.createElement('div');
-        row.className = 'cart-row';
-        row.innerHTML = `
-          <div>${item.name} <span class="muted">x ${order[id]}</span></div>
-          <div><button data-id="${id}" class="btn remove-btn" style="background:#ef4444;padding:6px 8px;border-radius:8px">Hapus</button></div>
-        `;
-        cartListEl.appendChild(row);
-      });
-      cartListEl.querySelectorAll('.remove-btn').forEach(b => b.addEventListener('click', (e) => {
-        const id = e.target.dataset.id; changeQty(id, -order[id]);
-      }));
+    function selesai(i) {
+      antrian.splice(i, 1);
+      localStorage.setItem("antrianKedai", JSON.stringify(antrian));
+      renderAntrian();
     }
 
-    function renderQueue() {
-      if (queue.length === 0) {
-        queueListEl.innerHTML = '<div class="muted">Belum ada antrian.</div>';
-        return;
-      }
-      queueListEl.innerHTML = '';
-      queue.forEach((q, i) => {
-        const div = document.createElement('div');
-        div.className = 'queue-row';
-        div.innerHTML = `
-          <div>
-            <strong>${q.name || 'Tanpa Nama'}</strong><br>
-            <span class="muted">${q.items.map(it => `${it.name} x${it.qty}`).join(', ')}</span><br>
-            <small>${q.note || ''}</small>
-          </div>
-          <div style="display:flex;gap:6px;">
-            <button class="btn" style="background:#22c55e;padding:6px 10px" onclick="sendQueue(${i})">Kirim</button>
-            <button class="btn" style="background:#ef4444;padding:6px 10px" onclick="removeQueue(${i})">Hapus</button>
-          </div>
-        `;
-        queueListEl.appendChild(div);
-      });
-    }
-
-    function removeQueue(i) {
-      if (!confirm('Hapus antrian ini?')) return;
-      queue.splice(i, 1);
-      saveQueue();
-      renderQueue();
-    }
-
-    addQueueBtn.addEventListener('click', () => {
-      const keys = Object.keys(order);
-      if (keys.length === 0) return alert('Belum ada item di pesanan.');
-      const items = keys.map(id => ({ id, name: menuData.find(m => m.id === id).name, qty: order[id] }));
-      queue.push({
-        name: customerNameEl.value.trim(),
-        note: customerNoteEl.value.trim(),
-        items
-      });
-      saveQueue();
-      clearBtn.click();
-      renderQueue();
-      alert('✅ Pesanan ditambahkan ke antrian!');
-    });
-
-    function sendQueue(i) {
-      const q = queue[i];
-      let lines = ['Halo, saya ingin memesan:'];
-      q.items.forEach(it => lines.push(`- ${it.name} x ${it.qty}`));
-      if (q.name) lines.push(`\nNama: ${q.name}`);
-      if (q.note) lines.push(`Catatan: ${q.note}`);
-      lines.push('\nTerima kasih.');
-      const text = encodeURIComponent(lines.join('\n'));
-      window.open(`https://wa.me/${ownerPhone}?text=${text}`, '_blank');
-    }
-
-    clearBtn.addEventListener('click', () => {
-      Object.keys(order).forEach(id => { document.getElementById('qty-' + id).textContent = '0'; });
-      for (const k in order) delete order[k];
-      customerNameEl.value = '';
-      customerNoteEl.value = '';
-      renderCart();
-    });
-
-    orderBtn.addEventListener('click', () => {
-      const keys = Object.keys(order);
-      if (keys.length === 0) return alert('Pilih minimal 1 item.');
-      let lines = ['Halo, saya ingin memesan:'];
-      keys.forEach(id => {
-        const item = menuData.find(m => m.id === id);
-        lines.push(`- ${item.name} x ${order[id]}`);
-      });
-      const name = customerNameEl.value.trim();
-      const note = customerNoteEl.value.trim();
-      if (name) lines.push(`\nNama: ${name}`);
-      if (note) lines.push(`Catatan: ${note}`);
-      lines.push('\nTerima kasih.');
-      const text = encodeURIComponent(lines.join('\n'));
-      window.open(`https://wa.me/${ownerPhone}?text=${text}`, '_blank');
-    });
-
-    createMenu();
-    renderCart();
-    renderQueue();
+    renderAntrian();
   </script>
 </body>
 </html>
